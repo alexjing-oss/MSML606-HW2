@@ -1,3 +1,4 @@
+#NO EXTERNAL SOURCES USED
 import csv
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):
@@ -35,22 +36,30 @@ class HomeWork2:
     def constructBinaryTree(self, input) -> TreeNode:
         #Since Postorder, Last element is the root. If current element is operator, should have two children. If curr is a number, should be a leaf
         input_rev = [x for x in reversed(input)]
-        print(input_rev)
-        root, list = self.constructBinaryTree_Aux(input_rev)
+        root, lst = self.constructBinaryTree_Aux(input_rev)
+        print(lst)
+        #Elements left in list -> Error
+        if len(lst) != 0:
+            print("invalid input")
+            return None
         print(self.treeString(root))
+        self.prefixNotationPrint(root)
+        self.infixNotationPrint(root)
+        self.postfixNotationPrint(root)
         return root
     #Recursive helper, returns Current Node and remaining list
-    def constructBinaryTree_Aux(self, list):
-        print(list)
-        root = TreeNode(list[0])
+    def constructBinaryTree_Aux(self, lst):
+        root = TreeNode(lst[0])
         if not root.val.isdigit():
-            if len(list) < 3:
+            #Operator doesnt have 2 children
+            if len(lst) < 3:
                 print("invalid input")
                 exit()
-            root.right, list = self.constructBinaryTree_Aux(list[1::])
-            root.left, list = self.constructBinaryTree_Aux(list[1::])
-        print(self.treeString(root))
-        return (root, list)
+            root.right, lst = self.constructBinaryTree_Aux(lst[1::])
+            root.left, lst = self.constructBinaryTree_Aux(lst)
+            return (root, lst)
+        else:
+            return(root,lst[1::])
 
 
 
@@ -60,7 +69,23 @@ class HomeWork2:
     # you can see the examples in p2_traversals.csv
 
     def prefixNotationPrint(self, head: TreeNode) -> list:
-        pass
+        lst = self.prefixNotationPrint_aux(head)
+        print(lst)
+        return lst
+
+
+    def prefixNotationPrint_aux(self, curr: TreeNode):
+        returnLst = []
+        returnLst.append(curr.val)
+        #Leaf
+        if curr.val.isdigit():
+            return returnLst
+        #Operator
+        else:
+            return returnLst + self.prefixNotationPrint_aux(curr.left) + self.prefixNotationPrint_aux(curr.right)
+            
+        
+
 
     # Problem 2.2: Use in-order traversal (left, root, right) for infix notation with appropriate parentheses.
     # return an array of elements of an infix expression
@@ -71,9 +96,21 @@ class HomeWork2:
     # even the outermost expression should be wrapped
     # treat parentheses as individual elements in the returned list (see output)
 
+    #Effectively same as prefix
     def infixNotationPrint(self, head: TreeNode) -> list:
-        pass
-
+        lst = self.infixNotationPrint_aux(head)
+        print(lst)
+        return lst
+    def infixNotationPrint_aux(self, curr: TreeNode):
+        returnLst = []
+        returnLst.append(curr.val)
+        #Leaf
+        if curr.val.isdigit():
+            return returnLst
+        #Operator
+        else:
+            return ["("] + self.infixNotationPrint_aux(curr.left) + returnLst +  self.infixNotationPrint_aux(curr.right) + [")"]
+            
 
     # Problem 2.3: Use post-order traversal (left, right, root) to generate postfix notation.
     # return an array of elements of a postfix expression
@@ -81,7 +118,20 @@ class HomeWork2:
     # you can see the examples in p2_traversals.csv
 
     def postfixNotationPrint(self, head: TreeNode) -> list:
-        pass
+        lst = self.postfixNotationPrint_aux(head)
+        print(lst)
+        return lst
+    def postfixNotationPrint_aux(self, curr: TreeNode):
+        returnLst = []
+        returnLst.append(curr.val)
+        #Leaf
+        if curr.val.isdigit():
+            return returnLst
+        #Operator
+        else:
+            return self.postfixNotationPrint_aux(curr.left)  +  self.postfixNotationPrint_aux(curr.right) + returnLst
+            
+
 
 
 class Stack:
