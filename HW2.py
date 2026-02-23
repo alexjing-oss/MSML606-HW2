@@ -145,7 +145,25 @@ class Stack:
 
     def __init__(self):
         # TODO: initialize the stack
-        pass
+
+        self.lst = []
+
+    
+    def push(self,val):
+        self.lst.append(val)
+
+    def pop(self):
+        val = self.lst[-1]
+        self.lst = self.lst[0:-1:]
+        return val
+    def empty(self):
+        return len(self.lst) == 0
+    def peek(self):
+        return self.lst[-1]
+    def peek_n(self,n):
+        return self.lst[-1:-n-1:-1]
+    def size(self):
+        return len(self.lst)
 
     # Problem 3: Write code to evaluate a postfix expression using stack and return the integer value
     # Use stack which you implemented above for this problem
@@ -160,9 +178,55 @@ class Stack:
 
     # DO NOT USE EVAL function for evaluating the expression
 
-    def evaluatePostfix(exp: str) -> int:
-        # TODO: implement this using your Stack class
-        pass
+    #Keep adding elements until we see two numbers in a row, then evaluate. 
+    def evaluatePostfix(self, exp: str) -> int:
+
+        vals = [int(x) if x.isdigit() else x for x in reversed(exp.split(" ")) ]
+        print(vals)
+        stack = Stack()
+        stack.push(vals[0])
+        vals = vals[1::]
+
+        #Continue until stack is empty, vals should be empty after looping
+        while(not stack.empty()):
+            print(stack.lst)
+            #One Element and is int
+            if stack.size() == 1 and isinstance(stack.peek(),int):
+                if len(vals) != 0:
+                    print("invalid input")
+                    return None
+                else:
+                    return stack.pop()
+            #Stack is Number, Number, Operator
+            elif all(isinstance(element, expected_type) for element, expected_type in zip(stack.peek_n(3), [int,int,str])):
+                num_1 = stack.pop()
+                num_2 = stack.pop()
+                operator = stack.pop()
+                if operator == "+":
+                    stack.push(num_1 + num_2)
+                if operator == "-":
+                    stack.push(num_1 - num_2)
+                if operator == "*":
+                    stack.push(num_1 * num_2)
+                if operator == "/":
+                    if num_2 == 0:
+                        raise ZeroDivisionError
+                    else:
+                        stack.push(num_1 // num_2)
+
+
+            elif len(vals)>0:
+                stack.push(vals[0])
+                vals = vals[1::]
+            else:
+                print("invalid input")
+        
+            
+
+    
+
+
+
 
 
 # Main Function. Do not edit the code below
