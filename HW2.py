@@ -37,15 +37,10 @@ class HomeWork2:
         #Since Postorder, Last element is the root. If current element is operator, should have two children. If curr is a number, should be a leaf
         input_rev = [x for x in reversed(input)]
         root, lst = self.constructBinaryTree_Aux(input_rev)
-        print(lst)
         #Elements left in list -> Error
         if len(lst) != 0:
             print("invalid input")
             return None
-        print(self.treeString(root))
-        self.prefixNotationPrint(root)
-        self.infixNotationPrint(root)
-        self.postfixNotationPrint(root)
         return root
     #Recursive helper, returns Current Node and remaining list
     def constructBinaryTree_Aux(self, lst):
@@ -70,7 +65,6 @@ class HomeWork2:
 
     def prefixNotationPrint(self, head: TreeNode) -> list:
         lst = self.prefixNotationPrint_aux(head)
-        print(lst)
         return lst
 
 
@@ -99,7 +93,6 @@ class HomeWork2:
     #Effectively same as prefix
     def infixNotationPrint(self, head: TreeNode) -> list:
         lst = self.infixNotationPrint_aux(head)
-        print(lst)
         return lst
     def infixNotationPrint_aux(self, curr: TreeNode):
         returnLst = []
@@ -119,7 +112,6 @@ class HomeWork2:
 
     def postfixNotationPrint(self, head: TreeNode) -> list:
         lst = self.postfixNotationPrint_aux(head)
-        print(lst)
         return lst
     def postfixNotationPrint_aux(self, curr: TreeNode):
         returnLst = []
@@ -182,14 +174,12 @@ class Stack:
     def evaluatePostfix(self, exp: str) -> int:
 
         vals = [int(x) if x.isdigit() else x for x in reversed(exp.split(" ")) ]
-        print(vals)
         stack = Stack()
         stack.push(vals[0])
         vals = vals[1::]
 
         #Continue until stack is empty, vals should be empty after looping
         while(not stack.empty()):
-            print(stack.lst)
             #One Element and is int
             if stack.size() == 1 and isinstance(stack.peek(),int):
                 if len(vals) != 0:
@@ -209,15 +199,16 @@ class Stack:
                 if operator == "*":
                     stack.push(num_1 * num_2)
                 if operator == "/":
+                    #Divide by zero
                     if num_2 == 0:
                         raise ZeroDivisionError
                     else:
                         stack.push(num_1 // num_2)
-
-
+            #If can't process, then try to add values to stack
             elif len(vals)>0:
                 stack.push(vals[0])
                 vals = vals[1::]
+            #If no more values to add and can't process, then issue with input
             else:
                 print("invalid input")
         
