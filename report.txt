@@ -1,0 +1,14 @@
+*NO EXTERNAL SOURCES OR AI WERE USED IN THIS ASSIGNMENT*
+
+For the expression evaluator, the process involves using a stack structure in order to continuously process work.
+If the top 3 values in the stack are number, number, operator, we know that we can process those values into a number as that represents a operator node and its two number children which are leaves, and replace it with a new numeric leaf node.
+Otherwise, we try to push a new value from the input expression onto the stack 
+Assuming a valid input, we are able to evaluate the expression by continuously repeating this process until the stack contains only one element at the end, being the final value of the expression, with the initial input also being exhausted.
+
+Edge cases are checked as follows:
+
+Empty postfix expressions are handled by checking the length of the vals list after splitting
+Malformed post expressions are handled by the "invalid input" print statements, which are printed when either the vals list runs out before we can evaluate to a single element, or the stack is evaluated to a single number while there are elements left in the initial list
+Division by zero is checked while evaluating division, hard check on if the divisor is zero
+Invalid tokens will be caught in the invalid operator print statement in the else statement
+Negative numbers are able to be used through "(len(x) > 1 and x[0] == "-" and x[1].isnumeric())" when creating vals
