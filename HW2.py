@@ -172,45 +172,54 @@ class Stack:
 
     #Keep adding elements until we see two numbers in a row, then evaluate. 
     def evaluatePostfix(self, exp: str) -> int:
-
-        vals = [int(x) if x.isdigit() else x for x in reversed(exp.split(" ")) ]
+        vals = [int(x) if x.isnumeric() or (len(x) > 1 and x[0] == "-" and x[1::].isnumeric()) else x for x in reversed(exp.split(" ")) ]
+        print(vals)
+        if len(vals) == 0:
+            print("No Expression")
+            return None
         stack = Stack()
         stack.push(vals[0])
         vals = vals[1::]
 
         #Continue until stack is empty, vals should be empty after looping
         while(not stack.empty()):
+            print(stack.peek_n(3))
             #One Element and is int
             if stack.size() == 1 and isinstance(stack.peek(),int):
                 if len(vals) != 0:
-                    print("invalid input")
+                    print("Invalid Input")
                     return None
                 else:
                     return stack.pop()
             #Stack is Number, Number, Operator
+            
             elif all(isinstance(element, expected_type) for element, expected_type in zip(stack.peek_n(3), [int,int,str])):
                 num_1 = stack.pop()
                 num_2 = stack.pop()
                 operator = stack.pop()
                 if operator == "+":
                     stack.push(num_1 + num_2)
-                if operator == "-":
+                elif operator == "-":
                     stack.push(num_1 - num_2)
-                if operator == "*":
+                elif operator == "*":
                     stack.push(num_1 * num_2)
-                if operator == "/":
+                elif operator == "/":
                     #Divide by zero
                     if num_2 == 0:
                         raise ZeroDivisionError
                     else:
                         stack.push(num_1 // num_2)
+                else:
+                    print("Invalid Operator")
+                    return None
             #If can't process, then try to add values to stack
             elif len(vals)>0:
                 stack.push(vals[0])
                 vals = vals[1::]
             #If no more values to add and can't process, then issue with input
             else:
-                print("invalid input")
+                print("Invalid Input")
+                return None
         
             
 
@@ -277,9 +286,13 @@ if __name__ == "__main__":
             if expected == "DIVZERO":
                 print(f"Test {idx} failed (expected division by zero)")
             else:
-                expected = int(expected)
-                assert result == expected, f"Test {idx} failed: {result} != {expected}"
-                print(f"Test case {idx} passed")
+                if expected == "None":
+                    assert result == None, f"Test {idx} failed: {result} != {None}"
+                    print(f"Test case {idx} passed")
+                else:
+                    expected = int(expected)
+                    assert result == expected, f"Test {idx} failed: {result} != {expected}"
+                    print(f"Test case {idx} passed")
 
         except ZeroDivisionError:
             assert expected == "DIVZERO", f"Test {idx} unexpected division by zero"
