@@ -23,25 +23,34 @@ class HomeWork2:
     #      / \
     #     3   4
 
-    #Recursive helper, returns Current Node and 1 if input is bad
+    
 
+    def treeString(self, root):
 
+        if root.left:
+            return f"{root.val}:({self.treeString(root.left)},{self.treeString(root.right)})"
+        else:
+            return root.val
+        
     def constructBinaryTree(self, input) -> TreeNode:
         #Since Postorder, Last element is the root. If current element is operator, should have two children. If curr is a number, should be a leaf
         input_rev = [x for x in reversed(input)]
         print(input_rev)
-        root, flag, list = self.constructBinaryTree_Aux(input_rev)
-        
+        root, list = self.constructBinaryTree_Aux(input_rev)
+        print(self.treeString(root))
+        return root
+    #Recursive helper, returns Current Node and remaining list
     def constructBinaryTree_Aux(self, list):
         print(list)
         root = TreeNode(list[0])
         if not root.val.isdigit():
-            root.right, flag, list = self.constructBinaryTree_Aux(list[1::])
-            root.left, flag, list = self.constructBinaryTree_Aux(list[1::])
-        else:
-            
-        
-        return (root, flag, list[1::])
+            if len(list) < 3:
+                print("invalid input")
+                exit()
+            root.right, list = self.constructBinaryTree_Aux(list[1::])
+            root.left, list = self.constructBinaryTree_Aux(list[1::])
+        print(self.treeString(root))
+        return (root, list)
 
 
 
